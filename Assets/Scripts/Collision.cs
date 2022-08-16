@@ -4,8 +4,35 @@ using UnityEngine;
 
 public class Collision : MonoBehaviour
 {
-    private void OnCollisionEnter2D(Collision2D collision)
+    bool hasPackage = false;
+    [SerializeField] Color32 hasPackageColor = new Color32 (11, 239, 15, 239);
+    [SerializeField] Color32 noPackageColor = new Color32 (255, 255, 255, 255);
+    [SerializeField] float destroyDelay = 0.1f;
+    SpriteRenderer cruisyRenderer;
+
+
+    void Start()
     {
-        Debug.Log("Kings never die");
+        cruisyRenderer = GetComponent<SpriteRenderer>();
+    }
+
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.tag == "package" && !hasPackage)
+        {
+            Debug.Log("Package picked up");
+            hasPackage = true;
+            if(hasPackage)
+            Destroy(other.gameObject, destroyDelay);
+            cruisyRenderer.color = hasPackageColor;
+           
+        }
+        else if (other.tag == "Customer" && hasPackage)
+        {
+            Debug.Log("package delivered");
+            hasPackage = false;
+            cruisyRenderer.color = noPackageColor;
+        }
     }
 }
